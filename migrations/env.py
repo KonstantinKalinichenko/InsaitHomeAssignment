@@ -1,14 +1,12 @@
-import os
 from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
-from App.models import db
+from Assignment import db
 
 target_metadata = db.metadata
 
 config = context.config
-database_url = os.getenv("DATABASE_URL")
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
@@ -26,7 +24,7 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url", database_url)
+    url = config.get_main_option("sqlalchemy.url", 'postgresql://postgres:postgres@host.docker.internal:5433/ask_openai')
     context.configure(
         url=url,
         target_metadata=target_metadata,

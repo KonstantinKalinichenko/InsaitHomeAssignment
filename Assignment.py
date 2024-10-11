@@ -1,18 +1,32 @@
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv
-from App.models import db, QnA
 import openai
 from openai import OpenAI
+from flask_sqlalchemy import SQLAlchemy
 import os
-
 
 load_dotenv()
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
+db = SQLAlchemy()
+
+
+class QnA(db.Model):
+    __tablename__ = 'questions_answers'
+    __table_args__ = {'schema': 'questions_answers_schema'}
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    question = db.Column(db.String, nullable=False)
+    answer = db.Column(db.Text, nullable=False)
+
+    def __repr__(self):
+        return f'QnA {self.id}: {self.question} -> {self.answer}'
+
+
 def create_app():
     application = Flask(__name__)
-    application.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+    application.config[
+        'SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@host.docker.internal:5433/ask_openai'
     application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(application)
     return application
@@ -58,4 +72,4 @@ if __name__ == "__main__":
     with app.app_context():
         db.create_all()
 
-    app.run(debug=True)
+    app.run(debug=True, port="5000", host='0.0.0.0')
