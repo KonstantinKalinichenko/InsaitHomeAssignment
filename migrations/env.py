@@ -1,14 +1,15 @@
+import os
 from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
+from App.models import db
 
-from App.models import db, QnA
 target_metadata = db.metadata
-config = context.config
 
-# Interpret the config file for Python logging.
-# This line sets up loggers basically.
+config = context.config
+database_url = os.getenv("DATABASE_URL")
+
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
@@ -25,7 +26,7 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url")
+    url = config.get_main_option("sqlalchemy.url", database_url)
     context.configure(
         url=url,
         target_metadata=target_metadata,

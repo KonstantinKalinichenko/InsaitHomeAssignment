@@ -14,6 +14,8 @@ The main application file is Assignment.py.
 Created models.py where you can find db model with 3 columns (id, question, answer)
 Created migrations directory for alembic migrations.
 
+I've dockerized the flask application and database according documentation - https://docs.docker.com/compose/
+
 I've decided to test my application by using Postman, but I exceeded my OpenAI API quota.
 ![img.png](img.png)
 Because of that I've created test.endpoint.py (tests directory) to test API endpoint using pytest

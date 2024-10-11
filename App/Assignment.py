@@ -9,13 +9,10 @@ import os
 load_dotenv()
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
-DB_USER = os.getenv('DB_USER')
-DB_PASSWORD = os.getenv('DB_PASSWORD')
-
 
 def create_app():
     application = Flask(__name__)
-    application.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{DB_USER}:{DB_PASSWORD}@localhost:5432/ask_openai'
+    application.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
     application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(application)
     return application
@@ -44,7 +41,7 @@ def ask():
                     "content": question
                 }
             ],
-            model='gpt-3.5-turbo'
+            model="gpt-3.5-turbo",
         )
         answer = response['choices'][0]['message']['content']
 
