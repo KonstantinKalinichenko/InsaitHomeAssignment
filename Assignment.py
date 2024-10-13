@@ -1,10 +1,12 @@
-from flask import Flask, request, jsonify
-from dotenv import load_dotenv
+import os
+
 import openai
 from openai import OpenAI
+from flask import Flask, request, jsonify
+from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
-import os
 from sqlalchemy import text
+
 load_dotenv()
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
@@ -24,14 +26,9 @@ class QnA(db.Model):
 
 
 def create_schema(engine, schema_name):
+    create_schema_sql = text(f"CREATE SCHEMA IF NOT EXISTS {schema_name}")
     with engine.connect() as connection:
-        result = connection.execute(
-            text(f"SELECT schema_name FROM information_schema.schemata WHERE schema_name = '{schema_name}'")
-        )
-        schema_exists = result.scalar()
-
-        if not schema_exists:
-            connection.execute(text(f'CREATE SCHEMA IF NOT EXISTS {schema_name}'))
+        connection.execute(create_schema_sql)
 
 
 def create_app():
