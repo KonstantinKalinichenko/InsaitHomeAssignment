@@ -2,7 +2,7 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
-from Assignment import db
+from flask_server import db
 
 target_metadata = db.metadata
 
